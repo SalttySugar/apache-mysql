@@ -1,0 +1,27 @@
+version: '3.7'
+
+networks:
+  app-network:
+    driver: bridge
+  
+
+services:
+  web:
+    build: conf/apache
+    networks:
+      - app-network
+    volumes:
+      - ./conf/apache/logs:/var/log/apache2
+      - ./www:/var/www/html
+    environment: 
+      - APACHE_RUN_USER=#1000
+
+  db:
+    image: mysql:5.7
+    environment: 
+      - MYSQL_ROOT_PASSWORD=${DATABASE_ROOT_PASSWORD}
+    networks:
+      - app-network
+    volumes:
+      - ./conf/database/data:/var/lib/mysql
+      - ./conf/database/logs:/var/log/mysql
